@@ -3,6 +3,7 @@ extends layout
 block content
   h1(class='text-light') Mongo Tribes
   p(class='text-light') Welcome to Mongo Tribes, #{username}! 
+  a(class='text-primary' href='/villages') Go to village overview 
     form(action='/logout?_method=DELETE' method=POST class='form-inline')
       input(type='hidden', name='_method' value='DELETE')
       button(type='Submit' class='btn btn-primary') Not #{username}?

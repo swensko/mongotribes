@@ -5,3 +5,4 @@ mongoose.connect('mongodb://localhost:27017/mongotribes', {useNewUrlParser: true
     else {console.log('Error in DB connection: ' + err)}
 }); 
 require('./user')
+require('./village')

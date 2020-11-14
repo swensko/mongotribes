@@ -4,8 +4,9 @@ if (process.env.NODE_ENV !== 'production') {
 
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose')
+require('./models/db')
 const express = require('express')
-const app = express()
+
 const bcrypt = require('bcrypt')
 const passport = require('passport')
 const flash = require('express-flash')
@@ -15,9 +16,10 @@ const pug = require('pug')
 const path = require('path')
 
 
-require('./models/db')
 
+const app = express()
 const User = mongoose.model('User');
+const Village = mongoose.model('Village')
 
 passport.use(User.createStrategy())
 passport.serializeUser(User.serializeUser())
@@ -49,8 +51,7 @@ app.get('/login', checkNotAuthenticated, (req, res) => {
 app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
   successRedirect: '/',
   failureRedirect: '/login',
-  failureFlash: true,
-  failureMessage: 'Invalid username/password.'
+  failureFlash: true
 }))
 
 app.get('/register', checkNotAuthenticated, (req, res) => {
@@ -68,10 +69,9 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
         console.log(err)
         res.render('register', { message: err.message})
       }
-    passport.authenticate('local')(req, res, () => {
-      res.redirect('/')
-    })
-
+      passport.authenticate('local')(req, res, () => {
+        res.redirect('/')
+      })
     })
   } catch {
     res.redirect('register')
@@ -104,5 +104,28 @@ function checkNotAuthenticated(req, res, next) {
   }
   next()
 }
+
+
+app.get('/villages', checkAuthenticated, (req, res, next) => {
+  Village.find({ owner: req.user.username}, (err, docs) =>{
+    if (!err) {
+      res.render('villages', {username: req.user.username, data: docs})
+    }
+    else {
+      console.log(err)
+      res.redirect('/')
+    }
+  }).orFail()
+})
+
+app.get('/test', (req, res) => {
+  console.log('hello')
+})
+
+
+
+
+
+
 
 app.listen(3000)
