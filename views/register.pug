@@ -1,0 +1,16 @@
+extends layout
+block content
+    p(class='text-danger')= message
+    form(action='/register', method='POST', autocomplete='off')
+        div(class='form-group')
+            label(class='text-light') Username
+            input(type='text', class='form-control', name='username', placeholders='Username')
+        div(class='form-group')
+            label(class='text-light') Email
+            input(type='text', class='form-control', name='email', placeholders='Email')
+        div(class='form-group')
+            label(class='text-light') Password
+            input(type='password', class='form-control', name='password')
+        div(class='form-group')
+            button(type='submit', class='btn btn-info') Submit
+            a(href='/login' class='float-right text-danger') Already signed up?
