@@ -28,7 +28,6 @@ const Village = mongoose.model('Village')
 // passport strategy based on User schema
 var Store = require('express-session').Store;
 var MongooseStore = require('mongoose-express-session')(Store);
-
 passport.use(User.createStrategy())
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
@@ -54,27 +53,31 @@ app.use(methodOverride('_method'))
 // Index
 var indexRouter = require('./routes/index')
 app.use('/', indexRouter)
-/////////////////////////////////////
 // /login
 var loginRoute = require('./routes/login')
 app.use('/login', loginRoute)
-/////////////////////////////////////
 // /register
 var registerRoute = require('./routes/register')
 app.use('/register', registerRoute)
-/////////////////////////////////////
 // /logout
 var logoutRoute = require('./routes/logout')
 app.use('/logout', logoutRoute)
-/////////////////////////////////////
 // /villages
 var villageRoute = require('./routes/villages')
 app.use('/villages', villageRoute)
+// /jobs
+var jobRoute = require('./routes/job')
+app.use('/job', jobRoute)
 /////////////////////////////////////////////////////////////////////////////
 // server scripts
 /////////////////////////////////////////////////////////////////////////////
-var incrementResources = require('./incrementResources')
-setInterval(incrementResources.run, 10000)
+var serverScripts = require('./serverScripts')
+setInterval(serverScripts.tickRSS, 30 * 1000)
+setInterval(serverScripts.checkJobs, 3 * 1000)
 /////////////////////////////////////////////////////////////////////////////
 // listen on port 3000
+date = Date.now()
+date2 = Date.now()
+setTimeout(() => {date2 = Date.now();console.log(date > date2)}, 1000)
+
 app.listen(3000)

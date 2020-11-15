@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var villageSchema = new mongoose.Schema({
+var jobSchema = new mongoose.Schema({
     jobType: {
         type: String
     },
@@ -21,4 +21,4 @@ var villageSchema = new mongoose.Schema({
     }
   });
 
-mongoose.model('Village', villageSchema);
+mongoose.model('Job', jobSchema);

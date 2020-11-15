@@ -6,3 +6,4 @@ mongoose.connect('mongodb://localhost:27017/mongotribes', {useNewUrlParser: true
 }); 
 require('./user')
 require('./village')
+require('./job')
