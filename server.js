@@ -49,149 +49,32 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
 /////////////////////////////////////////////////////////////////////////////
-//Middleware functions
-/////////////////////////////////////////////////////////////////////////////
-function checkAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next()
-  }
-
-  res.redirect('/login')
-}
-
-function checkNotAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return res.redirect('/')
-  }
-  next()
-}
-/////////////////////////////////////////////////////////////////////////////
 //Routes
 /////////////////////////////////////////////////////////////////////////////
 // Index
-app.get('/', checkAuthenticated, (req, res) => {
-  res.render('index', { username: req.user.username })
-})
+var indexRouter = require('./routes/index')
+app.use('/', indexRouter)
 /////////////////////////////////////
 // /login
-app.get('/login', checkNotAuthenticated, (req, res) => {
-  res.render('login')
-})
-
-app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/login',
-  failureFlash: true
-}))
+var loginRoute = require('./routes/login')
+app.use('/login', loginRoute)
 /////////////////////////////////////
 // /register
-app.get('/register', checkNotAuthenticated, (req, res) => {
-  res.render('register')
-})
-
-app.post('/register', checkNotAuthenticated, async (req, res) => {
-  try {
-    let user = new User({
-      username: req.body.username,
-      email: req.body.email
-    })
-    User.register(user, req.body.password, (err, user) => {
-      if (err) {
-        console.log(err)
-        res.render('register', { message: err.message})
-      }
-      passport.authenticate('local')(req, res, () => {
-        res.redirect('/')
-      })
-    })
-  } catch {
-    res.redirect('register')
-  }
-  console.log(req.body)
-})
+var registerRoute = require('./routes/register')
+app.use('/register', registerRoute)
 /////////////////////////////////////
 // /logout
-app.get('/logout', (req, res) => {
-  req.logOut()
-  res.redirect('/login')
-  console.log('USED GET /logout instead of delete')
-})
-
-app.delete('/logout', (req, res) => {
-  req.logOut()
-  res.redirect('/login')
-})
+var logoutRoute = require('./routes/logout')
+app.use('/logout', logoutRoute)
 /////////////////////////////////////
 // /villages
-app.get('/villages', checkAuthenticated, (req, res, next) => {
-  Village.find({ owner: req.user.username}, (err, docs) =>{
-    if (!err) {
-      res.render('villageList', {username: req.user.username, data: docs})
-    }
-    else {
-      console.log(err)
-      res.redirect('/')
-    }
-  }).orFail()
-})
-// individual village view
-app.get('/villages/:id', checkAuthenticated, async (req, res) => {
-  try {
-    village = await Village.findById(req.params.id)
-    if (village == null) {
-        return res.status(404).json({ message: 'Cannot find village.' })
-    }
-  } catch (err) {
-    return res.status(500).json( {message: err.message} )
-  }
-  res.village = village
-  if (village.owner == req.user.username) {
-    res.render('village', {village: village, username: req.user.username, isVillageOwner: true})
-  }
-  else {
-    res.render('village', {village: village, username: req.user.username})
-  }
-})
-// headquarters
-app.get('/villages/:id/hq', checkAuthenticated, async (req, res) => {
-  try {
-    village = await Village.findById(req.params.id)
-    if (village == null) {
-        return res.status(404).json({ message: 'Cannot find village.' })
-    }
-  } catch (err) {
-    return res.status(500).json( {message: err.message} )
-  }
-  res.village = village
-  if (village.owner == req.user.username) {
-    res.render('hq', {village: village, username: req.user.username, isVillageOwner: true})
-  }
-  else {
-    res.render('village', {village: village, username: req.user.username})
-  }
-})
-// barracks
-app.get('/villages/:id/barracks', checkAuthenticated, async (req, res) => {
-  try {
-    village = await Village.findById(req.params.id)
-    if (village == null) {
-        return res.status(404).json({ message: 'Cannot find village.' })
-    }
-  } catch (err) {
-    return res.status(500).json( {message: err.message} )
-  }
-  res.village = village
-  if (village.owner == req.user.username) {
-    res.render('barracks', {village: village, username: req.user.username, isVillageOwner: true})
-  }
-  else {
-    res.render('village', {village: village, username: req.user.username})
-  }
-})
-/////////////////////////////////////
+var villageRoute = require('./routes/villages')
+app.use('/villages', villageRoute)
+/////////////////////////////////////////////////////////////////////////////
 // server scripts
+/////////////////////////////////////////////////////////////////////////////
 var incrementResources = require('./incrementResources')
 setInterval(incrementResources.run, 10000)
-
+/////////////////////////////////////////////////////////////////////////////
 // listen on port 3000
 app.listen(3000)
