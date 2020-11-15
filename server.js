@@ -171,5 +171,9 @@ app.get('/villages/:id/hq', checkAuthenticated, async (req, res) => {
   }
 })
 /////////////////////////////////////
+// server scripts
+var incrementResources = require('./incrementResources')
+setInterval(incrementResources.run, 10000)
+
 // listen on port 3000
 app.listen(3000)
