@@ -11,5 +11,6 @@ block content
             each village in data
                 tr
                     th(scope='row')=village.owner
-                    th=village.name
+                    th
+                        a(href='/villages/'+village.id) #{village.name}
                     td #{village.coords.x}, #{village.coords.y}

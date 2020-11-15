@@ -1,0 +1,33 @@
+extends layout
+block content
+    if isVillageOwner
+        p=village.id
+        p(class='text-light') You are the village owner.
+        table(class='table text-light')
+            thead
+                tr
+                    th(scope='col') Owner
+                    th(scope='col') Name
+                    th(scope='col') Coords
+                    th(scope='col') Axemen
+            tbody
+                tr
+                    th(scope='row')=village.owner
+                    th
+                        a(href='/villages/'+village.id) #{village.name}
+                    td #{village.coords.x}, #{village.coords.y}
+                    td=village.troops.inVillage.axe
+    else
+        h1(class='text-light')=village.name
+        table(class='table text-light')
+            thead
+                tr
+                    th(scope='col') Owner
+                    th(scope='col') Name
+                    th(scope='col') Coords
+            tbody
+                tr
+                    th(scope='row')=village.owner
+                    th
+                        a(href='/villages/'+village.id) #{village.name}
+                    td #{village.coords.x}, #{village.coords.y}
