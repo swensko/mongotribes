@@ -164,7 +164,7 @@ app.get('/villages/:id/hq', checkAuthenticated, async (req, res) => {
   }
   res.village = village
   if (village.owner == req.user.username) {
-    res.render('village', {village: village, username: req.user.username, isVillageOwner: true})
+    res.render('hq', {village: village, username: req.user.username, isVillageOwner: true})
   }
   else {
     res.render('village', {village: village, username: req.user.username})

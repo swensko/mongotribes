@@ -12,11 +12,44 @@ var villageSchema = new mongoose.Schema({
         y: { type: Number }
     },
     points: {
-        type: Number
+        type: Number, 
+        default: 0
+    },
+    resources: {
+        clay: { type: Number, default: 0 },
+        iron: { type: Number, default: 0 },
+        wood: { type: Number, default: 0 }
     },
     troops: {
         inVillage: {
-            axe: { type: Number }
+            axe: { type: Number, default: 0 },
+            sword: {type: Number, default: 0}
+        }
+    },
+    buildings: {
+        hq: {
+            type: Number,
+            default: 1
+        },
+        barracks: {
+            type: Number,
+            default: 1
+        },
+        pit: {
+            type:Number,
+            default: 1
+        },
+        mine: {
+            type: Number,
+            default: 1
+        },
+        sawmill: {
+            type: Number,
+            default: 1
+        },
+        wall: {
+            type: Number,
+            default: 0
         }
     }
   });

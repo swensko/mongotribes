@@ -1,22 +1,32 @@
-extends layout
+extends layoutVillage
 block content
     if isVillageOwner
-        p=village.id
+        h1(class='text-light') Village Headquarters
         p(class='text-light') You are the village owner.
         table(class='table text-light')
             thead
                 tr
-                    th(scope='col') Owner
-                    th(scope='col') Name
-                    th(scope='col') Coords
-                    th(scope='col') Axemen
+                    th(scope='col') Building
+                    th(scope='col') Level
             tbody
                 tr
-                    th(scope='row')=village.owner
-                    th
-                        a(href='/villages/'+village.id) #{village.name}
-                    td #{village.coords.x}, #{village.coords.y}
-                    td=village.troops.inVillage.axe
+                    td Headquarters
+                    td=village.buildings.hq
+                tr
+                    td Barracks
+                    td=village.buildings.barracks
+                tr
+                    td Clay Pit
+                    td=village.buildings.pit
+                tr
+                    td Iron Mine
+                    td=village.buildings.mine
+                tr
+                    td Sawmill
+                    td=village.buildings.sawmill
+                tr
+                    td Wall
+                    td=village.buildings.wall
     else
         h1(class='text-light')=village.name
         table(class='table text-light')
