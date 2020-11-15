@@ -170,6 +170,24 @@ app.get('/villages/:id/hq', checkAuthenticated, async (req, res) => {
     res.render('village', {village: village, username: req.user.username})
   }
 })
+// barracks
+app.get('/villages/:id/barracks', checkAuthenticated, async (req, res) => {
+  try {
+    village = await Village.findById(req.params.id)
+    if (village == null) {
+        return res.status(404).json({ message: 'Cannot find village.' })
+    }
+  } catch (err) {
+    return res.status(500).json( {message: err.message} )
+  }
+  res.village = village
+  if (village.owner == req.user.username) {
+    res.render('barracks', {village: village, username: req.user.username, isVillageOwner: true})
+  }
+  else {
+    res.render('village', {village: village, username: req.user.username})
+  }
+})
 /////////////////////////////////////
 // server scripts
 var incrementResources = require('./incrementResources')
